@@ -2,8 +2,6 @@ module Referenceables
 
 export referenceable
 
-import Adapt
-
 # Use markdown files as the docstring:
 for (name, path) in [
     :Referenceables => joinpath(dirname(@__DIR__), "README.md"),
@@ -98,6 +96,8 @@ isreferenceable(xs) = _valtype(xs) <: RefIndexable
 _valtype(xs) = valtype(xs)
 _valtype(xs::AbstractArray) = eltype(xs)  # for old Julia
 
-Adapt.adapt_structure(to, x::Referenceable) = referenceable(Adapt.adapt(to, parent(x)))
+if !isdefined(Base, :get_extension)
+    include("../ext/ReferenceablesAdaptExt.jl")
+end
 
 end # module
